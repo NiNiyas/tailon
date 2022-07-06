@@ -1,0 +1,167 @@
+{{ define "title" }}Tailon{{ end }}
+{{ define "description" }}File Viewer{{ end }}
+{{ define "body" }}
+
+<script>
+ var allowCommandNames = {{.AllowCommandNames}};
+ var allowDownload = {{.AllowDownload}};
+ var commandScripts = {{.CommandScripts}};
+ var linesToTail = {{.LinesToTail}};
+ var linesOfHistory = {{.LinesOfHistory}};
+</script>
+
+<div id="app">
+    <transition name="fade">
+        <div v-if="!hideToolbar" id="toolbar">
+            <div class="tailon-dark toolbar-item" id="file-select">
+                <multiselect v-model="file" :options="fileList"
+                             :group-select="true"
+                             :allow-empty="false"
+                             group-values="files"
+                             group-label="group"
+                             track-by="alias"
+                             label="alias"
+                             @open="refreshFiles"
+                             :searchable="true" :show-labels="false" placeholder="File"></multiselect>
+                <!-- <select v-model="file" tabindex="1"></select> -->
+            </div>
+
+            <div class="tailon-dark toolbar-item" id="command-select">
+                <multiselect v-model="command" :options="allowCommandNames" :searchable="true" :show-labels="false" placeholder="Command"></multiselect>
+            </div>
+
+            <div class="toolbar-item toolbar-item-fill">
+                <div id="script-input" tabindex="3">
+                    <input ref="script_input" v-model="script" @keyup.enter="notifyBackend" @keyup.escape="clearInput" type="text" name="script" placeholder="" :disabled="!scriptInputEnabled" spellcheck="false">
+                    <div><i class="icon-bookmark"></i></div>
+                    <div><i class="icon-code"></i></div>
+                </div>
+            </div>
+
+            <div class="toolbar-item" tabindex="4">
+                <div class="button-group" id="action-bar">
+                    <a v-if="allowDownload" :href="downloadLink" title="Download File" target="_blank">
+                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 489 489" style="enable-background:new 0 0 489 489" xml:space="preserve"><g><g><path d="M329.2,327.2c-4.5,0-8.1,3.4-8.6,7.9c-3.9,38.6-36.5,68.7-76.2,68.7c-39.6,0-72.2-30.1-76.2-68.7
+			                c-0.5-4.4-4.1-7.9-8.6-7.9h-104c-21.8,0-39.5,17.7-39.5,39.5v82.8c0,21.8,17.7,39.5,39.5,39.5h377.8c21.8,0,39.5-17.7,39.5-39.5
+			                v-82.7c0-21.8-17.7-39.5-39.5-39.5H329.2V327.2z"/><path d="M303.5,198.6l-30.9,30.9V28.1C272.6,12.6,260,0,244.5,0l0,0c-15.5,0-28.1,12.6-28.1,28.1v201.4l-30.9-30.9
+			                c-9.5-9.5-24.7-11.9-35.9-4.4c-15.3,10.2-16.8,31.1-4.5,43.4l82.8,82.8c9.2,9.2,24.1,9.2,33.3,0l82.8-82.8
+			                c12.3-12.3,10.8-33.2-4.5-43.4C328.2,186.6,313,189,303.5,198.6z"/></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                    </a>
+                    <a @click="showConfig = !showConfig,showUIConfig = false" title="Configure">
+                      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 458.317 458.317" style="enable-background:new 0 0 458.317 458.317" xml:space="preserve"><g><g><path d="M446.185,179.159h-64.768c-2.536-7.702-5.636-15.15-9.26-22.29l45.818-45.818c4.737-4.737,4.737-12.416,0-17.152
+			                L364.416,40.34c-4.737-4.737-12.416-4.737-17.152,0l-45.818,45.818c-7.14-3.624-14.587-6.724-22.289-9.26V12.131
+			                c0.001-6.699-5.429-12.129-12.128-12.129h-75.743c-6.698,0-12.129,5.43-12.129,12.128v64.768
+			                c-7.702,2.535-15.149,5.636-22.29,9.26L111.05,40.341c-4.737-4.737-12.416-4.737-17.152,0L40.339,93.9
+			                c-4.737,4.736-4.737,12.416,0,17.152l45.817,45.817c-3.624,7.14-6.725,14.588-9.26,22.29H12.129C5.43,179.159,0,184.59,0,191.288
+			                v75.743c0,6.698,5.43,12.128,12.129,12.128h64.768c2.536,7.702,5.636,15.149,9.26,22.29L40.34,347.266
+			                c-4.737,4.736-4.737,12.416,0,17.152l53.559,53.559c4.737,4.736,12.416,4.736,17.152,0l45.817-45.817
+			                c7.14,3.624,14.587,6.725,22.29,9.26v64.768c0,6.698,5.43,12.128,12.129,12.128h75.743c6.698,0,12.129-5.43,12.129-12.128v-64.768
+			                c7.702-2.535,15.149-5.636,22.289-9.26l45.818,45.817c4.737,4.736,12.416,4.736,17.152,0l53.559-53.559
+			               c4.737-4.737,4.737-12.416,0-17.152l-45.817-45.817c3.624-7.14,6.724-14.587,9.26-22.289h64.768
+			               c6.698,0,12.129-5.43,12.129-12.128v-75.743C458.314,184.59,452.884,179.159,446.185,179.159z M229.157,289.542
+			               c-33.349,0-60.384-27.035-60.384-60.384s27.035-60.384,60.384-60.384s60.384,27.035,60.384,60.384
+			               S262.506,289.542,229.157,289.542z"/></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                    </a>
+                    <a @click="clearLogview" title="Clear Logview">
+                      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330" xml:space="preserve"><path id="XMLID_85_" d="M315,285H201.214l124.393-124.394c5.858-5.857,5.858-15.355,0-21.213l-120-120c-5.857-5.858-15.355-5.858-21.213,0l-180,179.999C1.58,202.205,0,206.02,0,209.999s1.58,7.794,4.394,10.607l90,90c2.813,2.813,6.628,4.393,10.606,4.393L165,315c0.006,0,0.011-0.001,0.017-0.001L315,315c8.283,0,15-6.716,15-15C330,291.716,323.284,285,315,285z M195,51.213L293.787,150L207,236.787L108.213,138L195,51.213z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                    </a>
+                    <a @click="showUIConfig = !showUIConfig,showConfig = false" title="UI Config">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g id="tool"><path d="M13.3,2H6.7A2.7,2.7,0,0,0,4,4.7V8A1,1,0,0,0,6,8V4.7A.7.7,0,0,1,6.7,4h6.6a.7.7,0,0,1,.7.7V7H11a1,1,0,0,0,0,2h3v2H11a1,1,0,0,0,0,2h3v2H11a1,1,0,0,0,0,2h3v2H11a1,1,0,0,0,0,2h3v2H11a1,1,0,0,0,0,2h3v2.3a.7.7,0,0,1-.7.7H6.7a.7.7,0,0,1-.7-.7V12a1,1,0,0,0-2,0V27.3A2.7,2.7,0,0,0,6.7,30h6.6A2.7,2.7,0,0,0,16,27.3V4.7A2.7,2.7,0,0,0,13.3,2Z"/><path d="M27,16a1,1,0,0,0,1-1V7A5,5,0,0,0,18,7V22.13a3.83,3.83,0,0,0,.65,2.15l3.52,5.27a1,1,0,0,0,1.66,0l3.52-5.27A3.83,3.83,0,0,0,28,22.13V19a1,1,0,0,0-2,0v3.13a1.92,1.92,0,0,1-.31,1L23,27.2l-2.69-4a1.92,1.92,0,0,1-.31-1V7a3,3,0,0,1,6,0v8A1,1,0,0,0,27,16Z"/></g></svg>
+                    </a>
+                    <a @click="hideToolbar = true" title="Hide Toolbar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm231-113.9L103.5 277.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L256 226.9l101.6 101.6c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L273 142.1c-9.4-9.4-24.6-9.4-34 0z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </transition>
+
+    <transition name="fade">
+    <div v-if="hideToolbar" class="button-group toolbar-hidden">
+        <a @click="hideToolbar = false" title="Show Toolbar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"/></svg>
+        </a>
+    </div>
+    </transition>
+
+    <transition name="fade">
+      <div v-if="showUIConfig" id="configuration">
+        <form>
+          <p>
+               <label for="font_color">Text Color:</label>
+               <select v-model="font_color" type="color">
+                   <option value="white">White</option>
+                   <option value="black">Black</option>
+                   <option value="green">Green</option>
+                   <option value="lime">Lime</option>
+                   <option value="grey">Grey</option>
+                   <option value="red">Red</option>
+                   <option value="cyan">Cyan</option>
+                   <option value="magenta">Magenta</option>
+               </select>
+           </p>
+           <p>
+             <label for="font_size">Font Size:</label>
+             <input type="range" min="15" value="15" max="100" v-model="font_size" class="slider" unit='px'>
+           </p>
+           <p>
+                <label for="font">Font:</label>
+                <select v-model="font" type="font">
+                   <option value="Consolas">Consolas (Default)</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Brush Script MT">Brush Script MT</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                    <option value="Courier">Courier</option>
+                    <option value="Gabriola">Gabriola</option>
+                </select>
+            </p>
+           <p>
+               <label for="theme">Background Color:</label>
+               <input v-model="theme" type="color" id="choose-theme-color">
+           </p>
+         <p>
+           <label for="clearData">Clear Data and Refresh:</label>
+             <button onclick="deleteItem()">Clear</button>
+           </p>
+        </form>
+      </div>
+    </transition>
+
+    <transition name="fade">
+    <div v-if="showConfig" id="configuration">
+        <form>
+            <p>
+                <label for="history-lines">Lines of history:</label>
+                <input v-model.number="linesOfHistory" type="number" name="history-lines" min="0">
+            </p>
+            <p>
+                <label for="tail-lines">Initial lines to tail:</label>
+                <input v-model.number="linesToTail" type="number" name="tail-lines" min="1">
+            </p>
+            <p>
+                <label for="wrap-lines">Enable line wrapping:</label>
+                <input v-model="wrapLines" type="checkbox" name="wrap-lines" id="wrap-lines">
+            </p>
+        </form>
+    </div>
+    </transition>
+
+    <vue-loading :active.sync="showLoadingOverlay" :can-cancel="false"></vue-loading>
+
+    <div v-if="!hideToolbar" class="scrollable" @click="showConfig = false;showUIConfig = false">
+        <logview ref="logview" v-bind:lines-of-history="linesOfHistory"></logview>
+    </div>
+    <div v-else class="scrollable-tool-bar-hidden"  @click="showConfig = false;showUIConfig = false">
+      <logview ref="logview" v-bind:lines-of-history="linesOfHistory"></logview>
+    </div>
+</div>
+
+{{ end }}

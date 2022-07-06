@@ -1,0 +1,97 @@
+//----------------------------------------------------------------------------
+// Fonts
+//----------------------------------------------------------------------------
+//$ttfonts: ( "Consolas", "Menlo", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", "monospace", "serif");
+
+$ttfonts: "Consolas";
+
+$tailon-logview-font-size: 15px;
+//----------------------------------------------------------------------------
+// Colors
+//----------------------------------------------------------------------------
+$tailon-logview-background-color: #1d1f21;
+$tailon-logview-text-color: #ffffff;
+$tailon-logview-even-color: #282a2e;
+$tailon-logview-current-line-background-color: #282a2e;
+$tailon-toolbar-background-color: #282a2e;
+$tailon-toolbar-input-background-color: #373b41;
+
+//
+// LOG LEVELS
+//
+$tailon-logview-emergency-background-color: #B71C1C;
+$tailon-logview-emergency-color: #1d1f21;
+
+$tailon-logview-alert-background-color: #D32F2F;
+$tailon-logview-alert-color: #1d1f21;
+
+$tailon-logview-critical-background-color: #F44336;
+$tailon-logview-critical-color: #1d1f21;
+
+$tailon-logview-error-background-color: #FF5722;
+$tailon-logview-error-color: #1d1f21;
+
+$tailon-logview-warning-background-color: #FF9100;
+$tailon-logview-warning-color: #1d1f21;
+
+$tailon-logview-notice-background-color: #4CAF50;
+$tailon-logview-notice-color: #1d1f21;
+
+$tailon-logview-info-background-color: #1976D2;
+$tailon-logview-info-color: #1d1f21;
+
+$tailon-logview-debug-background-color: #90CAF9;
+$tailon-logview-debug-color: #1d1f21;
+
+$tailon-logview-success-background-color: #00ae02;
+$tailon-logview-success-color: #1d1f21;
+
+$tailon-logview-exception-background-color: #d2022e;
+$tailon-logview-exception-color: #1d1f21;
+
+$tailon-logview-failure-background-color: #d2022e;
+$tailon-logview-failure-color: #1d1f21;
+
+$tailon-logview-failed-background-color: #d2022e;
+$tailon-logview-failed-color: #1d1f21;
+
+$tailon-logview-warn-background-color: #d2022e;
+$tailon-logview-warn-color: #1d1f21;
+//
+// HTTP METHODS
+//
+$tailon-logview-get-color: #1d1f21;
+$tailon-logview-get-background-color: #61AFFE;
+
+$tailon-logview-post-background-color: #49CC90;
+$tailon-logview-post-color: #1d1f21;
+
+$tailon-logview-delete-background-color: #F93E3E;
+$tailon-logview-delete-color: #1d1f21;
+
+$tailon-logview-put-background-color: #FCA130;
+$tailon-logview-put-color: #1d1f21;
+
+$tailon-logview-trace-background-color: #000000;
+$tailon-logview-trace-color: #1d1f21;
+
+$tailon-logview-head-background-color: #9012FE;
+$tailon-logview-head-color: #1d1f21;
+
+$tailon-logview-options-background-color: #0D5AA7;
+$tailon-logview-options-color: #1d1f21;
+
+$tailon-logview-patch-background-color: #50E3C2;
+$tailon-logview-patch-color: #1d1f21;
+
+$tailon-logview-connect-background-color: #e575f2;
+$tailon-logview-connect-color: #1d1f21;
+
+//
+// BADGES
+//
+$badge-padding-y: .25em;
+$badge-padding-x: .4em;
+$badge-font-size: 80%;
+$badge-font-weight: 700;
+$badge-border-radius: .25rem;

@@ -1,0 +1,79 @@
+name: Build and Push to GHCR
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [Build and Push to GHCR]
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push-to-ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+        with:
+          length: 7
+      - uses: actions/checkout@v2
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.GIT_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+          version: latest
+          driver-opts: image=moby/buildkit:master
+
+      - name: Build and push
+        id: docker_build_amd64
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/niniyas/tailon:beta
+            ghcr.io/${{ secrets.GIT_USER }}/tailon:beta-${{ steps.short-sha.outputs.sha }}
+          platforms: linux/amd64,linux/arm64
+
+      - name: ntfy success notifications
+        uses: niniyas/ntfy-action@master
+        if: success()
+        with:
+          url: ${{ secrets.NTFY_URL }}
+          topic: ${{ secrets.NTFY_TOPIC }}
+          tags: github,action,+1,partying_face
+          priority: 4
+          details: 'Workflow has been completed successfully!'
+          headers: '${{ secrets.NTFY_HEADERS }}'
+
+      - name: ntfy failed notifications
+        uses: niniyas/ntfy-action@master
+        if: failure()
+        with:
+          url: ${{ secrets.NTFY_URL }}
+          topic: ${{ secrets.NTFY_TOPIC }}
+          tags: github,action,failed,rotating_light
+          priority: 5
+          details: 'Workflow has failed!'
+          headers: '${{ secrets.NTFY_HEADERS }}'
+
+      - name: ntfy cancelled notifications
+        uses: niniyas/ntfy-action@master
+        if: cancelled()
+        with:
+          url: ${{ secrets.NTFY_URL }}
+          topic: ${{ secrets.NTFY_TOPIC }}
+          tags: github,action,cancelled,skull
+          details: 'Workflow has been cancelled!'
+          headers: '${{ secrets.NTFY_HEADERS }}'

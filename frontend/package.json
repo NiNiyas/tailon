@@ -1,0 +1,38 @@
+{
+   "name":"tailon",
+   "version":"1.0.0",
+   "description": "Webapp for looking at and searching through files and streams.",
+   "license":"Apache-2.0",
+   "scripts":{
+      "build":"npm install && npm upgrade && make clean && make all",
+      "build-and-watch":"npm install && npm upgrade && make clean && make all && make watch",
+      "build-tailon":"cd .. && go build -tags dev",
+      "build-frontend-and-tailon":"npm install && npm upgrade && make clean && make all && cd .. && go build -tags dev"
+   },
+   "keywords":[
+      "tailon",
+      "logviewer"
+   ],
+   "bugs":{
+      "url":"https://github.com/NiNiyas/tailon/issues"
+   },
+   "homepage":"https://github.com/NiNiyas/tailon",
+   "devDependencies":{
+      "@mdi/font":"^6.5.96",
+      "autoprefixer":"^10.4.7",
+      "clean-css":"^5.3.0",
+      "clean-css-cli":"^5.6.0",
+      "debounce":"^1.2.1",
+      "html5shiv":"^3.7.3",
+      "node-sass":"^7.0.1",
+      "normalize-css":"^2.3.1",
+      "npm":"^8.13.2",
+      "postcss":"^8.4.14",
+      "postcss-cli":"^10.0.0",
+      "sockjs-client":"^1.6.1",
+      "uglify-js":"^3.16.2",
+      "vue":"^2.7.2",
+      "vue-loading-overlay":"^3.4.2",
+      "vue-multiselect":"^2.1.6"
+   }
+}

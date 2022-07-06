@@ -1,0 +1,36 @@
+title = "Tailon"
+relative-root = "/"
+listen-addr = [":8080"]
+allow-download = true
+lines-of-history = 0
+lines-to-tail = 20000
+allow-commands = ["tail", "grep", "grep -v", "sed", "awk"]
+
+[files]
+  file1 = "alias=test,group=test_group,log.log"
+  file2 = "alias=test1,group=test_group1,log.log"
+
+[commands]
+
+  [commands.tail]
+  action = ["tail", "-n", "$lines", "-F", "$path"]
+
+  [commands.grep]
+  stdin = "tail"
+  action = ["grep", "-e", "$script"]
+  default = ".*"
+
+  [commands.sed]
+  stdin = "tail"
+  action = ["sed", "-u", "-e", "$script"]
+  default = "s/.*/&/"
+
+  [commands.awk]
+  stdin = "tail"
+  action = ["awk", "--sandbox", "$script"]
+  default = "{print $0; fflush()}"
+
+  [commands."grep -v"]
+  stdin = "tail"
+  action = ["grep", "-v", "--text", "--line-buffered", "--color=never", "-e", "$script"]
+  default = "^$"
