@@ -4,28 +4,28 @@ Vue.component('vue-loading', window.VueLoading);
 var apiURL = endsWith(window.location.href, '/') ? window.location.href + "ws" : window.location.href.replace(/[^\/]+$/, 'ws');
 
 if (localStorage.getItem("userFontColor") === null) {
-    	 document.documentElement.style.setProperty("--fontColor", "white");
-    } else {
-      document.documentElement.style.setProperty("--fontColor", localStorage.getItem('userFontColor'));
+    document.documentElement.style.setProperty("--fontColor", "white");
+} else {
+    document.documentElement.style.setProperty("--fontColor", localStorage.getItem('userFontColor'));
 };
 
 if (localStorage.getItem("userBackgroundColor") === null) {
-      document.documentElement.style.setProperty("--mainColor", "#1d1f21");
-   } else {
-      document.documentElement.style.setProperty("--mainColor", localStorage.getItem("userBackgroundColor"));
+    document.documentElement.style.setProperty("--mainColor", "#1d1f21");
+} else {
+    document.documentElement.style.setProperty("--mainColor", localStorage.getItem("userBackgroundColor"));
 };
 
 if (localStorage.getItem("userFontSize") === null) {
-      document.documentElement.style.setProperty("--fontSize", "15px");
-      localStorage.setItem("userFontSize", "15px");
-   } else {
-      document.documentElement.style.setProperty("--fontSize", localStorage.getItem("userFontSize"));
+    document.documentElement.style.setProperty("--fontSize", "13px");
+    localStorage.setItem("userFontSize", "13px");
+} else {
+    document.documentElement.style.setProperty("--fontSize", localStorage.getItem("userFontSize"));
 };
 
 if (localStorage.getItem("userFont") === null) {
-      document.documentElement.style.setProperty("--font", "Consolas");
-   } else {
-      document.documentElement.style.setProperty("--font", localStorage.getItem("userFont"));
+    document.documentElement.style.setProperty("--font", "Default");
+} else {
+    document.documentElement.style.setProperty("--font", localStorage.getItem("userFont"));
 };
 
 //if (localStorage.getItem("historyLines") === null) {
@@ -50,8 +50,8 @@ var app = new Vue({
         'script': null,
         'font_color': localStorage.getItem("userFontColor") || "white",
         'theme': localStorage.getItem('userBackgroundColor') || "#1d1f21",
-        'font_size': localStorage.getItem('userFontSize').replace('px','') || "15px",
-        'font': localStorage.getItem('userFont') || "Consolas",
+        'font_size': localStorage.getItem('userFontSize').replace('px', '') || "13px",
+        'font': localStorage.getItem('userFont') || "Default",
 
         'linesOfHistory': linesOfHistory,
         'linesToTail': linesToTail,
@@ -65,16 +65,16 @@ var app = new Vue({
         'socket': null,
         'isConnected': false
     },
-    created: function () {
+    created: function() {
         this.backendConnect();
 
         this.command = this.allowCommandNames[0];
     },
     computed: {
-        scriptInputEnabled: function () {
+        scriptInputEnabled: function() {
             return this.commandScripts[this.command] !== "";
         },
-        downloadLink: function () {
+        downloadLink: function() {
             if (this.file) {
                 return relativeRoot + 'files/?path=' + this.file.path;
             }
@@ -82,10 +82,10 @@ var app = new Vue({
         }
     },
     methods: {
-        clearLogview: function () {
+        clearLogview: function() {
             this.$refs.logview.clearLines();
         },
-        backendConnect: function (){
+        backendConnect: function() {
             console.log('Connecting to: ' + apiURL);
             this.showLoadingOverlay = true;
             this.socket = new SockJS(apiURL);
@@ -93,26 +93,26 @@ var app = new Vue({
             this.socket.onclose = this.onBackendClose;
             this.socket.onmessage = this.onBackendMessage;
         },
-        onBackendOpen: function () {
+        onBackendOpen: function() {
             console.log('Connected to backend.');
             this.isConnected = true;
             this.refreshFiles();
         },
-        onBackendClose: function () {
+        onBackendClose: function() {
             console.log('Disconnected from backend.');
             this.isConnected = false;
             backendConnect = this.backendConnect;
-            window.setTimeout(function () {
+            window.setTimeout(function() {
                 backendConnect();
             }, 1000);
         },
-        onBackendMessage: function (message) {
+        onBackendMessage: function(message) {
             var data = JSON.parse(message.data);
 
             if (data.constructor === Object) {
                 // Reshape into something that vue-multiselect :group-select can use.
                 var fileList = [];
-                Object.keys(data).forEach(function (key) {
+                Object.keys(data).forEach(function(key) {
                     var group = ("__default__" === key) ? "Ungrouped Files" : key;
                     fileList.push({
                         "group": group,
@@ -124,24 +124,24 @@ var app = new Vue({
 
                 // Set file input to first entry in list.
                 if (!this.file) {
-                  var query = parseQueryString(window.location.search);
-                  if (Array.isArray(query.path)){
-                      var k = query.path[0];
-                      var files = fileList.map(function  (e) {
-                          return e.files;
-                      }).flat()
+                    var query = parseQueryString(window.location.search);
+                    if (Array.isArray(query.path)) {
+                        var k = query.path[0];
+                        var files = fileList.map(function(e) {
+                            return e.files;
+                        }).flat()
 
-                      files = files.filter(function  (e) {
-                          return e.alias==k || e.path==k;
-                      })
-                      if (files.length > 0) {
-                          this.file = files[0];
-                      } else {
-                          this.file = fileList[0].files[0];
-                      }
-                  } else {
-                      this.file = fileList[0].files[0];
-                  }
+                        files = files.filter(function(e) {
+                            return e.alias == k || e.path == k;
+                        })
+                        if (files.length > 0) {
+                            this.file = files[0];
+                        } else {
+                            this.file = fileList[0].files[0];
+                        }
+                    } else {
+                        this.file = fileList[0].files[0];
+                    }
                 }
             } else {
                 var stream = data[0];
@@ -149,11 +149,11 @@ var app = new Vue({
                 this.$refs.logview.write(stream, line);
             }
         },
-        refreshFiles: function () {
+        refreshFiles: function() {
             console.log("Updating file list..");
             this.socket.send("list");
         },
-        notifyBackend: function () {
+        notifyBackend: function() {
             var msg = {
                 command: this.command,
                 script: this.script,
@@ -164,7 +164,7 @@ var app = new Vue({
             this.clearLogview();
             this.socket.send(JSON.stringify(msg));
         },
-        clearInput: function () {
+        clearInput: function() {
             this.script = "";
             this.notifyBackend();
         }
@@ -180,22 +180,22 @@ var app = new Vue({
         //  document.documentElement.style.setProperty("--historyLines", val);
         //  localStorage.setItem("userhistoryLines", val);
         //},
-        font_color: function (val) {
+        font_color: function(val) {
             this.$refs.logview.changeFontColor(val);
             document.documentElement.style.setProperty("--fontColor", val);
             localStorage.setItem("userFontColor", val);
         },
-        font: function (val) {
+        font: function(val) {
             this.$refs.logview.changeFont(val);
             document.documentElement.style.setProperty("--font", val);
             localStorage.setItem("userFont", val);
         },
-        font_size: function (val) {
+        font_size: function(val) {
             this.$refs.logview.changeFontSize(val);
             document.documentElement.style.setProperty("--fontSize", val + "px");
             localStorage.setItem("userFontSize", val + "px");
         },
-        theme: function (val) {
+        theme: function(val) {
             document.documentElement.style.setProperty("--mainColor", val);
             localStorage.setItem("userBackgroundColor", val);
         },
@@ -208,7 +208,7 @@ var app = new Vue({
         file: function(val) {
             if (val && this.isConnected) {
                 this.notifyBackend();
-                this.$nextTick(function () {
+                this.$nextTick(function() {
                     this.$refs.script_input.select();
                     this.$refs.script_input.focus();
                 })

@@ -109,7 +109,7 @@ div #command-select {
 }
 
 .toolbar-text {
-    font-family: $ttfonts;
+    font-family: var(--font);
     font-size: 13px;
 }
 
@@ -548,7 +548,7 @@ input::placeholder {
     form {
         padding: 10px;
         display: table;
-        font-family: $ttfonts;
+        font-family: var(--font);
         font-size: 14px;
         color: #c5c8c6;
     }
@@ -585,7 +585,7 @@ input::placeholder {
 .tailon-dark {
     .multiselect {
         text-align: center;
-        font-family: $ttfonts;
+        font-family: var(--font);
         line-height: 26px;
         font-size: 13px;
         color: #c5c8c6;
