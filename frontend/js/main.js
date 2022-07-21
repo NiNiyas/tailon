@@ -23,7 +23,7 @@ if (localStorage.getItem("userFontSize") === null) {
 };
 
 if (localStorage.getItem("userFont") === null) {
-    document.documentElement.style.setProperty("--font", "Default");
+    document.documentElement.style.setProperty("--font", "Consolas, Menlo,Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif");
 } else {
     document.documentElement.style.setProperty("--font", localStorage.getItem("userFont"));
 };
@@ -51,7 +51,7 @@ var app = new Vue({
         'font_color': localStorage.getItem("userFontColor") || "white",
         'theme': localStorage.getItem('userBackgroundColor') || "#1d1f21",
         'font_size': localStorage.getItem('userFontSize').replace('px', '') || "13px",
-        'font': localStorage.getItem('userFont') || "Default",
+        'font': localStorage.getItem('userFont') || "Consolas, Menlo,Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif",
 
         'linesOfHistory': linesOfHistory,
         'linesToTail': linesToTail,

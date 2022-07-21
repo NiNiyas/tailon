@@ -1,11 +1,18 @@
 # Changelog
 
+## [1.0.2] - 2022-07-21
+
+## UI
+- Another possible fix for default font issue (#1).
+- Added `Gainsboro` font color.
+- Changed default font-family of log-view to `Consolas, Menlo,Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif`. Same as [gvalkov/tailon](https://github.com/gvalkov/tailon/blob/master/frontend/scss/vars.scss#L4)
+
 ## [1.0.1] - 2022-07-21
 
 ## UI
-Fixed default font issue (#1).
-Toolbar fonts will now be changed too.
-Reduced the default font size from 15px to 13px.
+- Possible fix for default font issue (#1).
+- Toolbar fonts will now be changed too.
+- Reduced the default font size from 15px to 13px.
 
 ## [1.0.0] - 2022-07-06
 First of all, I am not familiar with GO or JavaScript. I learned them while I was trying to make this better. \
