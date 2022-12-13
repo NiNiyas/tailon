@@ -192,6 +192,7 @@ Tailon will automatically convert the following to labels:
 - CRITICAL
 - ERROR
 - WARNING
+- WARN
 - NOTICE
 - INFO
 - DEBUG

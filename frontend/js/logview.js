@@ -80,9 +80,9 @@ Vue.component('logview', {
         createExceptionPan: function(innerHtml) {
             return this.createSpan(innerHtml, 'log-entry log-failure');
         },
-        //createExceptionPan: function(innerHtml) {
-        //    return this.createSpan(innerHtml, 'log-entry log-warn');
-        //},
+        createExceptionPan: function(innerHtml) {
+            return this.createSpan(innerHtml, 'log-entry log-warn');
+        },
         //
         // HTTP METHODS
         //
@@ -149,10 +149,10 @@ Vue.component('logview', {
                 } else if (logtype == "ERROR") {
                     // span = this.createErrorPan(line);
                     line = line.replace("ERROR", "<span class=\"badge badge-level-error\"><span class=\"mdi mdi-alpha-e-circle\"></span>ERROR</span>");
-                } //else if (logtype == "WARN") {
-                    // span = this.createWarningPan(line);
-                    //line = line.replace("WARN", "<span class=\"badge badge-level-warning\"><span class=\"mdi mdi-alert\"></span>WARN</span>");
-              //  }
+                } else if (logtype == "WARN") {
+                     // span = this.createWarnPan(line);
+                    line = line.replace("WARN", "<span class=\"badge badge-level-warning\"><span class=\"mdi mdi-alert\"></span>WARN</span>");
+                }
                 else if (logtype == "WARNING") {
                     // span = this.createWarningPan(line);
                     line = line.replace("WARNING", "<span class=\"badge badge-level-warning\"><span class=\"mdi mdi-alert\"></span>WARNING</span>");

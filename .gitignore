@@ -31,4 +31,4 @@ testdata/
 *.log
 *.bat
 
-dist/
+goreleaser/dist/

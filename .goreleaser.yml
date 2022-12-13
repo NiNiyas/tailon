@@ -6,3 +6,5 @@ builds:
       - amd64
       - arm64
       - arm
+
+dist: goreleaser/dist

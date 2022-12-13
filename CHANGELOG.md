@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3] - 2022-12-13
+
+## UI
+- Added support for WARN label.
+
+## Other
+- Add ignored build files. Thanks to [sam0324sam](https://github.com/sam0324sam) for reporting this.
+
 ## [1.0.2] - 2022-07-21
 
 ## UI
