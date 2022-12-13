@@ -32,3 +32,4 @@ testdata/
 *.bat
 
 goreleaser/dist/
+frontend/dist/bak
