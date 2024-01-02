@@ -12,23 +12,23 @@ jobs:
   build-and-push-to-ghcr:
     runs-on: ubuntu-latest
     steps:
-      - uses: benjlevesque/short-sha@v1.2
+      - uses: benjlevesque/short-sha@v2.2
         id: short-sha
         with:
           length: 7
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.1.1
       - name: Log into GitHub Container Registry
         run: echo "${{ secrets.GIT_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3.0.0
         with:
           image: tonistiigi/binfmt:latest
           platforms: all
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3.0.0
         with:
           install: true
           version: latest
@@ -36,7 +36,7 @@ jobs:
 
       - name: Build and push
         id: docker_build_amd64
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5.1.0
         with:
           context: ./
           file: ./Dockerfile
@@ -55,6 +55,7 @@ jobs:
           tags: github,action,+1,partying_face
           priority: 4
           image: true
+          actions: 'default'
           details: 'Workflow has been completed successfully!'
           headers: '${{ secrets.NTFY_HEADERS }}'
 
@@ -67,6 +68,7 @@ jobs:
           tags: github,action,failed,rotating_light
           priority: 5
           image: true
+          actions: 'default'
           details: 'Workflow has failed!'
           headers: '${{ secrets.NTFY_HEADERS }}'
 
@@ -80,3 +82,4 @@ jobs:
           details: 'Workflow has been cancelled!'
           headers: '${{ secrets.NTFY_HEADERS }}'
           image: true
+          actions: 'default'
